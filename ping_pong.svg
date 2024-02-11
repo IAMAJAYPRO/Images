@@ -1,0 +1,79 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+	<!-- Made by iamajaypro -->
+    <!-- Table -->
+    <rect x="50" y="50" width="500" height="300" fill="#009933" stroke="black" stroke-width="2"/>
+    
+    <!-- Paddles -->
+    <rect id="leftPaddle" x="70" y="175" width="20" height="50" fill="#0000cc" stroke="black" stroke-width="2"/>
+    <rect id="rightPaddle" x="510" y="175" width="20" height="50" fill="#cc0000" stroke="black" stroke-width="2"/>
+    
+    <!-- Ball -->
+    <circle id="ball" cx="300" cy="200" r="10" fill="#ff6600"/>
+    
+    <!-- Score -->
+    <text x="260" y="30" font-family="Arial" font-size="18" fill="black">Player 1: <tspan id="score1">0</tspan></text>
+    <text x="360" y="30" font-family="Arial" font-size="18" fill="black">Player 2: <tspan id="score2">0</tspan></text>
+    
+    <script type="text/ecmascript">
+        const ball = document.getElementById('ball');
+        const leftPaddle = document.getElementById('leftPaddle');
+        const rightPaddle = document.getElementById('rightPaddle');
+        let score1 = 0;
+        let score2 = 0;
+        
+        // Ball movement
+        let ballDX = 3;
+        let ballDY = 2;
+        
+        function moveBall() {
+            const ballX = parseFloat(ball.getAttribute('cx'));
+            const ballY = parseFloat(ball.getAttribute('cy'));
+            const leftPaddleY = parseFloat(leftPaddle.getAttribute('y'));
+            const rightPaddleY = parseFloat(rightPaddle.getAttribute('y'));
+            
+            // Check collision with paddles
+            if ((ballX <= 90 && ballY >= leftPaddleY && ballY <= leftPaddleY + 50) ||
+                (ballX >= 490 && ballY >= rightPaddleY && ballY <= rightPaddleY + 50)) {
+                ballDX = -ballDX;
+            }
+            
+            // Check collision with top and bottom walls
+            if (ballY + ballDY <= 60 || ballY + ballDY >= 340) {
+                ballDY = -ballDY;
+            }
+            
+            // Check collision with left and right walls
+            if (ballX + ballDX <= 60) {
+                score2++;
+                document.getElementById('score2').textContent = score2;
+                resetBall();
+            } else if (ballX + ballDX >= 540) {
+                score1++;
+                document.getElementById('score1').textContent = score1;
+                resetBall();
+            }
+            'Made by iamajaypro'
+            ball.setAttribute('cx', ballX + ballDX);
+            ball.setAttribute('cy', ballY + ballDY);
+            
+            // Update paddle positions
+            leftPaddle.setAttribute('y', ballY - 25);
+        }
+        
+        function resetBall() {
+            ball.setAttribute('cx', 300);
+            ball.setAttribute('cy', 200);
+            ballDX = -ballDX;
+        }
+        
+        setInterval(moveBall, 20); // Update ball position every 20ms
+        
+        // Mouse movement for right paddle
+        document.addEventListener('mousemove', (event) => {
+            const mouseY = event.clientY;
+            if (mouseY >= 75 && mouseY <= 325) {
+                rightPaddle.setAttribute('y', mouseY - 25);
+            }
+        });
+    </script>
+</svg>
